@@ -78,60 +78,65 @@
     fjs.parentNode.insertBefore(js, fjs);
   }(document, 'script', 'facebook-jssdk'));
 
+  //google map api *********************************************
   $(function() {
+
     //利用canvas產生一個內含文字的圖檔
     function createMarkerIcon(text, opt) {
-        //定義預設參數
-        var defaultOptions = {
-          fontStyle: "normal", //normal, bold, italic
-          fontName: "Arial",
-          fontSize: 12, //以Pixel為單位
-          bgColor: "darkblue",
-          fgColor: "white",
-          padding: 4,
-          arrowHeight: 6 //下方尖角高度
-        };
-        options = $.extend(defaultOptions, opt);
-        //建立Canvas，開始幹活兒
-        var canvas = document.createElement("canvas"),
-          context = canvas.getContext("2d");
-        //評估文字尺寸
-        var font = options.fontStyle + " " + options.fontSize + "px " +
-          options.fontName;
-        context.font = font;
-        var metrics = context.measureText(text);
-        //文字大小加上padding作為外部尺寸
-        var w = metrics.width + options.padding * 2;
-        //高度以Font的大小為準
-        var h = options.fontSize + options.padding * 2 +
-          options.arrowHeight;
-        canvas.width = w;
-        canvas.height = h;
-        //邊框及背景
-        context.beginPath();
-        context.rect(0, 0, w, h - options.arrowHeight);
-        context.fillStyle = options.bgColor;
-        context.fill();
-        //畫出下方尖角
-        context.beginPath();
-        var x = w / 2,
-          y = h,
-          arwSz = options.arrowHeight;
-        context.moveTo(x, y);
-        context.lineTo(x - arwSz, y - arwSz);
-        context.lineTo(x + arwSz, y - arwSz);
-        context.lineTo(x, y);
-        context.fill();
-        //印出文字
-        context.textAlign = "center";
-        context.fillStyle = options.fgColor;
-        context.font = font;
-        context.fillText(text,
-          w / 2, (h - options.arrowHeight) / 2 + options.padding);
-        //傳回DataURI字串
-        return canvas.toDataURL();
-      }
-      //計算兩個經緯座標間的距離(Haversine公式)
+      //定義預設參數
+      var defaultOptions = {
+        fontStyle: "normal", //normal, bold, italic
+        fontName: "Arial",
+        fontSize: 12, //以Pixel為單位
+        bgColor: "darkblue",
+        fgColor: "white",
+        padding: 4,
+        arrowHeight: 6 //下方尖角高度
+      };
+      options = $.extend(defaultOptions, opt);
+      //建立Canvas，開始幹活兒
+      var canvas = document.createElement("canvas"),
+        context = canvas.getContext("2d");
+      //評估文字尺寸
+      var font = options.fontStyle + " " + options.fontSize + "px " +
+        options.fontName;
+      context.font = font;
+      var metrics = context.measureText(text);
+      //文字大小加上padding作為外部尺寸
+      var w = metrics.width + options.padding * 2;
+      //高度以Font的大小為準
+      var h = options.fontSize + options.padding * 2 +
+        options.arrowHeight;
+      canvas.width = w;
+      canvas.height = h;
+      //邊框及背景
+      context.beginPath();
+      context.rect(0, 0, w, h - options.arrowHeight);
+      context.fillStyle = options.bgColor;
+      context.fill();
+      //畫出下方尖角
+      context.beginPath();
+      var x = w / 2,
+        y = h,
+        arwSz = options.arrowHeight;
+      context.moveTo(x, y);
+      context.lineTo(x - arwSz, y - arwSz);
+      context.lineTo(x + arwSz, y - arwSz);
+      context.lineTo(x, y);
+      context.fill();
+      //印出文字
+      context.textAlign = "center";
+      context.fillStyle = options.fgColor;
+      context.font = font;
+      context.fillText(text,
+        w / 2, (h - options.arrowHeight) / 2 + options.padding);
+      //傳回DataURI字串
+      return canvas.toDataURL();
+    }
+
+
+
+    //計算兩個經緯座標間的距離(Haversine公式)
     function distHaversine(p1, p2) {
         var rad = function(x) {
           return x * Math.PI / 180;
@@ -149,18 +154,23 @@
     var branches = [];
     //取得分局資料(含經緯座標)，存為物作陣列
     var list =
-      "中正中隊-泉州分隊,(02)23374679,中正區泉州街40號,25.024533,121.512367\n" +
-      "中正中隊-華山分隊,(02)23412668,中正區北平東路1號,25.0472139,121.520964\n" +
-      "萬華中隊-龍山分隊,(02)23122496,萬華區桂林路137號,25.038608,121.499346\n" +
-      "萬華中隊-雙園分隊,(02)23053374,萬華區西藏路213之1號,25.028646,121.495087\n" +
-      "中正中隊-城中分隊,(02)23812839,中正區忠孝西路1段86號,25.046918,121.513425\n" +
-      "文山中隊-萬芳分隊,(02)22305720,文山區萬美街1段52號,25.004964,121.561605\n" +
-      "文山中隊-木柵分隊,(02)29391604,文山區木柵路2段200號,24.9890353,121.5630845\n" +
-      "中正中隊-忠孝分隊,(02)23516396,中正區忠孝東路2段8號,25.043697,121.527056\n" +
-      "文山中隊-寶橋分隊,(02)29395140,文山區樟新街2號,24.979967,121.554816\n" +
-      "大安中隊-安和分隊,(02)27094191,大安區安和路2段2號,25.032745,121.55225\n" +
-      "大安中隊-金華分隊,(02)23917653,大安區愛國東路79巷13號,25.032502,121.527762\n" +
-      "大安中隊-復興分隊,(02)27067965,大安區復興南路2段92號,25.0299894,121.5433298";
+      "Taipei Station-社團法人中華民國國際青年之家協會,(02)23311102,中正區北平西路3號,25.0477505,121.5170599\n" +
+      "Taipei Station-新驛旅店台北車站前站店,(02)23148008,中正區懷寧街7號,25.046266,121.51426\n" +
+      "Taipei Station-力歐時尚旅館,(02)23145296,中正區延平南路9號,25.046306,121.510901\n" +
+      "Taipei Station-台北凱撒大飯店,(02)23115151,中正區忠孝西路一段38號,25.049451,121.516904\n" +
+      "Taipei Station-台北青年國際旅館,(02)23113201,中正區許昌街19號,25.045681,121.516558\n" +
+      "Taipei Station-大師會館,(02)25596777,大同區環河北路一段,25.048786,121.518569\n" +
+      "Taipei Station-天成大飯店,(02)23617856,中正區忠孝西路一段43號,25.048786,121.518569\n" +
+      "Taipei Station-璽愛旅店,(02)23516396,中正區忠孝西路一段72號,25.046844,121.514009\n" +
+      "Taipei Station-福泰桔子商旅開封店,(02)23881523,中正區開封街一段41號,25.046128,121.51255\n" +
+      "Taipei Station-捷絲旅西門町館,(02)23709000,中正區中華路一段41號,25.0449241,121.5094408\n" +
+      "Taipei Station-喜苑旅店,(02)23887269,中正區重慶南路一段18號,25.0462109,121.513097\n" +
+      "Taipei Station-城美大飯店,(02)23147305,中正區漢口街一段88號,25.045084,121.511916\n" +
+      "Taipei Station-貝殼窩青年旅舍,(02)23882833,中正區懷寧街84號,25.0429659,121.513943\n" +
+      "Taipei Station-台北凱撒大飯店,(02)23115151,中正區忠孝西路一段38號,25.0462585,121.5164218\n" +
+      "Taipei Station-新驛旅店,(02)77327777,大同區長安西路77號,25.05108,121.516674";
+
+
     var lines = list.replace(/\r/g, "").split('\n');
     //lines[i]格式如下:
     //文山中隊-木柵分隊,(02)29391604,文山區木柵路2段200號,24.9890353,121.5630845
@@ -176,6 +186,7 @@
       });
     }
     getGeolocation();
+
     //取得使用者目前位罝
     function getGeolocation() {
         //alert('llll');
@@ -241,7 +252,6 @@
       map.fitBounds(bounds);
     }
   });
-  </script>
   </script>
 </body>
 
