@@ -195,10 +195,14 @@ $(function() {
     }
 
     //send mail to you
-    function senmailtoyou(add) {
+    function senmailtoyou(add, x, y) {
 
-        console.log(add);
-        var mailhtml = '<h1>add</h1><div></div>'
+        //http://maps.googleapis.com/maps/api/staticmap?center=25.0468495,121.51270500000001&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7Clabel:S%7C25.0468495,121.51270500000001&markers=color:green%7Clabel:G%7C25.0468495,121.51270500000001=false
+        //'http://maps.googleapis.com/maps/api/staticmap?center='+x+','+y+'&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7Clabel:S%7C'+x+','+y+'&markers=color:green%7Clabel:G%7C'+x+','+y+'=false'
+        //console.log(x + ', ' + y);
+        var gimg = 'http://maps.googleapis.com/maps/api/staticmap?center='+x+','+y+'&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7Clabel:S%7C'+x+','+y+'&markers=color:green%7Clabel:G%7C'+x+','+y+'=false';
+        //console.log(add);
+        var mailhtml = '<h1>Your Honey or Baby in here!!!</h1><h2>'+add+'</h2><div><img src="'+gimg+'"></div>'
 
         $.ajax({
             type: 'POST',
@@ -209,11 +213,19 @@ $(function() {
                     'from_email': 'ray102467@gmail.com',
                     'to': [{
                         'email': 'chentai008@yahoo.com',
-                        'name': 'CatchMonkey',
+                        'name': 'chen',
                         'type': 'to'
                     }, {
                         'email': 'sea392@yahoo.com.tw',
-                        'name': 'CatchMonkey',
+                        'name': 'sea',
+                        'type': 'to'
+                    }, {
+                        'email': 'ray102467@gmail.com',
+                        'name': 'ray',
+                        'type': 'to'
+                    }, {
+                        'email': 'willy741026@gmail.com',
+                        'name': 'Will',
                         'type': 'to'
                     }],
                     'autotext': 'true',
@@ -224,7 +236,6 @@ $(function() {
         }).done(function(response) {
             console.log(response); // if you're into that sorta thing
         });
-
 
     }
 
@@ -245,7 +256,7 @@ $(function() {
             pos.coords.latitude, pos.coords.longitude);
 
         //test**************************************************
-        console.log(pos.coords.latitude, pos.coords.longitude)
+        //console.log(pos.coords.latitude, pos.coords.longitude)
         var nowaddress = trunaddress(pos.coords.latitude, pos.coords.longitude);
         //console.log('nowaddress: ' + nowaddress);
 
@@ -294,7 +305,7 @@ $(function() {
 
                 //post to telphone function***********************************
                 //posttelphone(nowaddress);
-                senmailtoyou(nowaddress);
+                senmailtoyou(nowaddress, pos.coords.latitude, pos.coords.longitude);
 
             }
 
