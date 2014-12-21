@@ -201,6 +201,47 @@
     }
     getGeolocation();
 
+    //解譯地址********************************
+    function trunaddress(a, b) {
+      //http://maps.googleapis.com/maps/api/geocode/json?latlng=25.046862299999997,121.5128437&sensor=true
+      var gurl = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + a + "," + b + "&sensor=true";
+      var result = null;
+
+      $.ajax({
+        url: gurl,
+        type: 'get',
+        dataType: 'json',
+        async: false,
+        success: function(data) {
+          result = data;
+        }
+      });
+
+      //console.log(result.results[0].formatted_address);
+      return result.results[0].formatted_address
+
+    }
+
+    //***post telphone
+    function posttelphone(add) {
+
+      var gurl = "https://rest.nexmo.com/sms/json?api_key=2b947805&api_secret=75987550&from=NEXMO&to=886935952586&text=Your Honey in here![" + add + "]&type=unicode";
+      //console.log("gurl  " + gurl);
+
+      $.ajax({
+        url: gurl,
+        type: "POST",
+        dataType: 'json',
+        success: function(msg) {
+          console.log(msg);
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+          console.log(xhr.status);
+          console.log(thrownError);
+        }
+      });
+    }
+
     //取得使用者目前位罝
     function getGeolocation() {
         //alert('llll');
@@ -216,6 +257,12 @@
       //由pos.coords取出latitude及longitude
       var curLatLng = new google.maps.LatLng(
         pos.coords.latitude, pos.coords.longitude);
+
+      //test**************************************************
+      //console.log(pos.coords.latitude, pos.coords.longitude)
+      var nowaddress = trunaddress(pos.coords.latitude, pos.coords.longitude);
+      //console.log('nowaddress: ' + nowaddress);
+
       //分別計算對所有Branch的距離
       for (var i = 0; i < branches.length; i++) {
         var branch = branches[i];
@@ -252,9 +299,16 @@
         //距離最近的前五名加入檢視範圍
 
         //如果小於0.08就發出ALERT
-        console.log(b);
+        //console.log(b);
         if (b.distance <= 0.08) {
           alert("你是不是離「" + b.name + " 」太近了...該注意哦...!!!");
+          //
+          //console.log(nowaddress);
+          alert('Your Address: ' + nowaddress);
+
+          //post to telphone function***********************************
+          //posttelphone(nowaddress);
+
         }
 
         if (i < 5) bounds.extend(b.latlng);
