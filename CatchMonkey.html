@@ -4,9 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <title>CatchMonkey</title>
-  <script src='https://code.jquery.com/jquery-1.11.2.min.js'></script>
-  <script src="https://maps.google.com/maps/api/js?sensor=true"></script>
   <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
   <style>
   body,
   input {
@@ -23,17 +22,31 @@
   #map_canvas {
     height: 100%
   }
+  .headtop {
+    margin-bottom: 0;
+  }
   </style>
 </head>
 
 <body>
 
-  <h1 id="fb-welcome"></h1>
-  <hr>
+  <div class="jumbotron headtop">
+    <div class="container">
+      <h1 id="fb-welcome"></h1>
+      <p>Where are you....</p>
+    </div>
+  </div>
+
   <div id="map_canvas" style="width:100%; height:100%"></div>
 
 
+
+
+  <!--   ***script start*** -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="https://maps.google.com/maps/api/js?sensor=true"></script>
   <script>
+  //FB Script ******************************* start
   window.fbAsyncInit = function() {
     FB.init({
       appId: '1511226939153366',
@@ -46,7 +59,7 @@
       if (response.status == 'connected') {
         FB.api('/me?fields=first_name', function(data) {
           var welcomeBlock = document.getElementById('fb-welcome');
-          welcomeBlock.innerHTML = data.first_name + '! Catch YOU! ';
+          welcomeBlock.innerHTML = "<b>" + data.first_name + '</b>! Catch YOU! ';
         });
       }
     }
@@ -77,6 +90,7 @@
     js.src = "//connect.facebook.net/en_US/sdk.js";
     fjs.parentNode.insertBefore(js, fjs);
   }(document, 'script', 'facebook-jssdk'));
+  //FB Script ******************************* End
 
   //google map api *********************************************
   $(function() {
@@ -236,6 +250,13 @@
       for (var i = 0; i < branches.length; i++) {
         var b = branches[i];
         //距離最近的前五名加入檢視範圍
+
+        //如果小於0.08就發出ALERT
+        console.log(b);
+        if (b.distance <= 0.08) {
+          alert("你是不是離「" + b.name + " 」太近了...該注意哦...!!!");
+        }
+
         if (i < 5) bounds.extend(b.latlng);
         var marker = new google.maps.Marker({
           position: b.latlng,
