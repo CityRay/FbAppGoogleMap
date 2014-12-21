@@ -1,0 +1,17 @@
+body, input {
+    font-size: 9pt;
+}
+html {
+    height: 100%
+}
+body {
+    height: 100%;
+    margin: 0px;
+    padding: 0px
+}
+#map_canvas {
+    height: 100%
+}
+.headtop {
+    margin-bottom: 0;
+}
