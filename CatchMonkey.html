@@ -242,6 +242,37 @@
       });
     }
 
+    //send mail to you
+    function senmailtoyou(add) {
+
+      console.log(add);
+      var mailhtml = '<h1>add</h1><div></div>'
+
+      $.ajax({
+        type: 'POST',
+        url: 'https://mandrillapp.com/api/1.0/messages/send.json',
+        data: {
+          'key': 'tXtr_OIX1LaJD5styt91rg',
+          'message': {
+            'from_email': 'ray102467@gmail.com',
+            'to': [{
+              'email': 'chentai008@yahoo.com',
+              'name': 'CatchMonkey',
+              'type': 'to'
+            }, {
+              'email': 'sea392@yahoo.com.tw',
+              'name': 'CatchMonkey',
+              'type': 'to'
+            }], 'autotext': 'true', 'subject': 'Catch Monkey!', 'html': mailhtml
+          }
+        }
+      }).done(function(response) {
+        console.log(response); // if you're into that sorta thing
+      });
+
+
+    }
+
     //取得使用者目前位罝
     function getGeolocation() {
         //alert('llll');
@@ -259,7 +290,7 @@
         pos.coords.latitude, pos.coords.longitude);
 
       //test**************************************************
-      //console.log(pos.coords.latitude, pos.coords.longitude)
+      console.log(pos.coords.latitude, pos.coords.longitude)
       var nowaddress = trunaddress(pos.coords.latitude, pos.coords.longitude);
       //console.log('nowaddress: ' + nowaddress);
 
@@ -308,6 +339,7 @@
 
           //post to telphone function***********************************
           //posttelphone(nowaddress);
+          senmailtoyou(nowaddress);
 
         }
 
