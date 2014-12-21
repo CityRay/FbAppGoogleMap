@@ -197,12 +197,12 @@ $(function() {
     //send mail to you
     function senmailtoyou(add, x, y) {
 
-        //http://maps.googleapis.com/maps/api/staticmap?center=25.0468495,121.51270500000001&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7Clabel:S%7C25.0468495,121.51270500000001&markers=color:green%7Clabel:G%7C25.0468495,121.51270500000001=false
+        //http://maps.googleapis.com/maps/api/staticmap?center=25.0468495,121.51270500000001&zoom=16&size=600x300&maptype=roadmap&language=TW&markers=color:red%7Clabel:S%7C25.0468495,121.51270500000001&markers=color:green%7Clabel:G%7C25.0468495,121.51270500000001=false
         //'http://maps.googleapis.com/maps/api/staticmap?center='+x+','+y+'&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7Clabel:S%7C'+x+','+y+'&markers=color:green%7Clabel:G%7C'+x+','+y+'=false'
         //console.log(x + ', ' + y);
-        var gimg = 'http://maps.googleapis.com/maps/api/staticmap?center='+x+','+y+'&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7Clabel:S%7C'+x+','+y+'&markers=color:green%7Clabel:G%7C'+x+','+y+'=false';
+        var gimg = 'http://maps.googleapis.com/maps/api/staticmap?center=' + x + ',' + y + '&zoom=16&size=600x300&maptype=roadmap&language=TW&markers=color:red%7Clabel:S%7C' + x + ',' + y + '&markers=color:green%7Clabel:G%7C' + x + ',' + y + '=false';
         //console.log(add);
-        var mailhtml = '<h1>Your Honey or Baby in here!!!</h1><h2>'+add+'</h2><div><img src="'+gimg+'"></div>'
+        var mailhtml = '<h1>Your Honey or Baby in here!!!</h1><h2>' + add + '</h2><div><img src="' + gimg + '"></div>'
 
         $.ajax({
             type: 'POST',
@@ -210,7 +210,7 @@ $(function() {
             data: {
                 'key': 'tXtr_OIX1LaJD5styt91rg',
                 'message': {
-                    'from_email': 'ray102467@gmail.com',
+                    'from_email': 'CatchMonkey@gmail.com',
                     'to': [{
                         'email': 'chentai008@yahoo.com',
                         'name': 'chen',
@@ -229,12 +229,13 @@ $(function() {
                         'type': 'to'
                     }],
                     'autotext': 'true',
-                    'subject': 'Catch Monkey!',
+                    'subject': '[Catch Monkey] Dear Where!!!',
                     'html': mailhtml
                 }
             }
         }).done(function(response) {
-            console.log(response); // if you're into that sorta thing
+            //console.log(response);
+            //if you're into that sorta thing
         });
 
     }
@@ -290,6 +291,7 @@ $(function() {
             map: map
         });
         var h = [];
+        var sendnotice = true;
         //因為已排序過，故會依距離由近到遠加入Marker
         for (var i = 0; i < branches.length; i++) {
             var b = branches[i];
@@ -301,11 +303,14 @@ $(function() {
                 alert("你是不是離「" + b.name + " 」太近了...該注意哦...!!!");
                 //
                 //console.log(nowaddress);
-                alert('Your Address: ' + nowaddress);
 
-                //post to telphone function***********************************
-                //posttelphone(nowaddress);
-                senmailtoyou(nowaddress, pos.coords.latitude, pos.coords.longitude);
+                if (sendnotice) {
+                    alert('Your Address: ' + nowaddress);
+                    //post to telphone function***********************************
+                    //posttelphone(nowaddress);
+                    senmailtoyou(nowaddress, pos.coords.latitude, pos.coords.longitude);
+                    sendnotice = false;
+                }
 
             }
 
